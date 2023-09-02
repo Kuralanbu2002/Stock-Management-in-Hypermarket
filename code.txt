@@ -1,0 +1,213 @@
+create table Customer(
+    cust_id int,
+    cust_firstname varchar(20),
+    cust_lastname varchar(20),
+    cust_address varchar(20),
+    cust_phno int,
+    primary key(cust_id)
+);
+
+desc Customer;
+
+create table Store(
+    store_id int,
+    location varchar(20),
+    primary key(store_id)
+);
+
+desc Store;
+
+create table Employee(
+    e_id int,
+    e_firstname varchar(20),
+    e_lastname varchar(20),
+    salary int,
+    store_id int, 
+    primary key(e_id), 
+    foreign key(store_id) references Store(store_id)
+);
+
+desc Employee;
+
+create table Product(
+    product_id int,
+    product_name varchar(20),
+    brand varchar(20),
+    price int,
+    primary key(product_id)
+);
+
+desc Product;
+
+create table Category(
+    category_id int,
+    product_id int, 
+    name varchar(20),
+    foreign key(product_id) references Product(product_id)
+);
+
+desc Category;
+
+create table Cart(
+    cart_id int,
+    cust_id int,
+    product_id int,
+    store_id int,
+    total int, 
+    foreign key(cust_id) references Customer(cust_id),
+    foreign key(product_id) references Product(product_id),
+    foreign key(store_id) references Store(store_id),
+    primary key(cart_id)
+);
+
+desc Cart;
+
+create table Account(
+    account_id int,
+    order_details int,
+    cust_id int,
+    foreign key(cust_id) references Customer(cust_id)
+); 
+
+desc Account;
+
+create table Stock(
+    cart_id int,
+    product_id int,
+    quantity int,
+    foreign key(cart_id) references Cart(cart_id),
+    foreign key(product_id) references Product(product_id)
+);
+
+desc Stock; 
+
+insert into Customer values (11, 'Kuralanbu', 'Selvaraj', 'Madurai', 8804351228);
+insert into Customer values (12, 'Balashivaram', 'Ganesan', 'Salem', 9713567543);
+insert into Customer values (13, 'Mouleshwar', 'Saravanan', 'Madurai', 9654765822);
+insert into Customer values (14, 'Ajay', 'Kumar', 'Salem', 9788076521);
+insert into Customer values (15, 'Naren', 'Mouria', 'Salem', 7689901234); 
+
+select *from Customer;
+
+insert into Store values (1, 'Salem');
+insert into Store values (2, 'Madurai');
+
+select *from Store;
+
+insert into Employee values (3001, 'Vimal', 'Dharshan', 45000, 1);
+insert into Employee values (3002, 'Mohamed', 'Aathil', 35000, 2);
+insert into Employee values (3003, 'Arjun', 'Nair', 50000, 1);
+insert into Employee values (3004, 'Sai', 'Krishna', 30000, 2);
+insert into Employee values (3005, 'Adarsh', 'Ravikumar', 55000, 1); 
+
+select *from Employee;
+
+insert into Product values (435,'Air Conditioner','Voltas',40000);
+insert into Product values (512,'MacBook Air','Apple',99000);
+insert into Product values (765,'Badminton Racket','Yonex',1999);
+insert into Product values (842, 'Washing Machine','LG',25000);
+insert into Product values (987, 'Refrigerator','Samsung',35000);
+
+select *from Product;
+
+insert into Category values (123, 512, 'Electronic gadget');
+insert into Category values (154, 765, 'Sports');
+insert into Category values (176, 435, 'Appliances');
+insert into Category values (176, 842, 'Appliances');
+insert into Category values (176, 987, 'Appliances');
+
+select *from Category;
+
+insert into Cart values (102,13,512,1,99000);
+insert into Cart values (103,15,987,2,35000);
+insert into Cart values (104,11,435,1,40000);
+insert into Cart values (105,14,765,1,1999);
+insert into Cart values (106,12,842,2,25000);
+
+select *from Cart;
+
+insert into Account values (14567,100065,12);
+insert into Account values (15324,100071,13);
+insert into Account values (12321,100082,14);
+insert into Account values (13388,100088,15);
+insert into Account values (17899,100094,11); 
+
+select *from Account;
+
+insert into Stock values (102,512,12);
+insert into Stock values (103,987,13);
+insert into Stock values (104,435,14);
+insert into Stock values (105,765,15);
+insert into Stock values (106,842,11);
+
+select *from Stock; 
+
+SELECT e_firstname, e_lastname, salary FROM Employee; 
+-- select the first name, last name and salary of all Employees
+
+SELECT cust_firstname, cust_lastname, cust_phno FROM Customer; 
+-- select the first name, last name and phone number of all Customers
+
+SELECT store_id, location FROM Store; 
+-- select all store id and locations from Stores
+
+SELECT product_name, price FROM Product; 
+-- select all product names and prices from the Products
+
+SELECT name, product_name FROM Category c 
+INNER JOIN Product p ON c.product_id = p.product_id; 
+-- select all names from the category and join with all product names by joining product id(key)
+
+SELECT cart_id, total FROM Cart; 
+-- select cart id and total amount from all the Cart details 
+
+SELECT account_id, cust_firstname, cust_lastname FROM Account a 
+INNER JOIN Customer c ON a.cust_id = c.cust_id; 
+--select all account id from Accounts and join with 
+--all first and last names from all Customers by joining cust_id(key)
+
+SELECT product_name, quantity FROM Stock s 
+INNER JOIN Product p ON s.product_id = p.product_id; 
+-- select all product names from Product and join with 
+-- all quantities from Stock respectively by joining product_id(key)
+
+SELECT e_firstname, e_lastname FROM Employee WHERE store_id = 1; 
+-- select the first name and last name of Employee who works in store id 1
+
+SELECT cust_phno FROM Customer WHERE cust_id = 11; 
+-- select the customer phone number from Customer whose customer id is 1
+
+SELECT location FROM Store WHERE store_id = 2; 
+-- select the location from Store whose store id is 2
+
+SELECT price FROM Product WHERE product_id = 987; 
+-- select the price from Product whose product id is 987
+
+SELECT name FROM Category WHERE product_id = 512; 
+-- select the name from Category whose product id is 512
+
+SELECT total FROM Cart WHERE cart_id = 102; 
+-- select the total amount from Cart whose cart id is 102
+
+SELECT cust_firstname, cust_lastname FROM Account a 
+INNER JOIN Customer c ON a.cust_id = c.cust_id WHERE account_id = 14567; 
+-- select the first name and last name from Customer whose account id 
+-- from Account is 14567 by joining cust_id(key)
+
+SELECT quantity FROM Stock WHERE cart_id = 106 AND product_id = 842; 
+-- select the quantity from Stock whose cart id is 106 and product id is 842
+
+SELECT COUNT(*) FROM Employee WHERE store_id = 1; 
+-- select the count of Employees of Employee who works in store id 1
+
+SELECT AVG(salary) FROM Employee; 
+-- select the average salary of all Employees from Employee
+
+SELECT MAX(total) FROM Cart; 
+-- select maximum value of total amount from Cart
+
+SELECT product_name, 
+       (SELECT SUM(quantity) FROM Stock WHERE Stock.product_id = Product.product_id) AS total_quantity,
+       (SELECT COUNT(*) FROM Stock WHERE Stock.product_id = Product.product_id AND quantity = 0) AS out_of_stock_count
+FROM Product; -- select the product name from Product and the total quantity of each product from Stock using the product id(key) and out-of-stock 
+-- count of each product from Stock using the product id(key)
